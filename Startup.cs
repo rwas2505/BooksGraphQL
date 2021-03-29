@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Database;
 using GraphiQl;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -34,6 +35,16 @@ namespace BooksGraphQL
             });
             
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+            services.AddAuthentication(options =>
+            {
+            options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+            .AddJwtBearer(options =>
+            {
+            options.Authority = "https://dev-84275405.okta.com/oauth2/default";
+            options.Audience = "api://default";
+            options.RequireHttpsMetadata = false;
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -44,6 +55,7 @@ namespace BooksGraphQL
                 app.UseDeveloperExceptionPage();
             }
 
+            app.UseAuthentication();
             app.UseGraphiQl("/graphql");
             app.UseMvc();
         }

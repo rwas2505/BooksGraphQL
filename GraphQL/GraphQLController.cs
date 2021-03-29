@@ -1,6 +1,7 @@
 using System.Threading.Tasks;
 using Database;
 using GraphQL.Types;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GraphQL
@@ -13,6 +14,7 @@ namespace GraphQL
 
         public GraphQLController(ApplicationDbContext db) => _db = db;
 
+        [Authorize]
         public async Task<IActionResult> Post([FromBody] GraphQLQuery query)
         {
         var inputs = query.Variables.ToInputs();
